@@ -17,12 +17,11 @@ def question1():
             if position % 100 == 0:
                 password += 1
 
-    print(password)
-    # 992
+    return password
 
 
 def question2():
-    position = 50
+    prev_position = 50
     password = 0
 
     with (open('day01-2.txt') as file):
@@ -30,28 +29,17 @@ def question2():
             direction = line[0:1]
             count = int(line[1:])
 
-            full_turns = count // 100
-            remainder = count % 100
+            full_turns, remainder = divmod(count, 100)
 
             if remainder != 0:
-                started_on_zero = position == 0
-                partial_turns = 0
+                new_position = prev_position - remainder if direction == 'L' else prev_position + remainder
+                partial_turns = 0 if prev_position == 0 or 0 < new_position < 100 else 1
+                prev_position = abs(100 + new_position) % 100
 
-                if direction == 'L':
-                    position -= remainder
-                    if not started_on_zero and position <= 0:
-                        partial_turns = 1
-                else:
-                    position += remainder
-                    if not started_on_zero and position >= 100:
-                        partial_turns = 1
+            password += full_turns + partial_turns
 
-                position = abs(100+position) % 100
+    return password
 
-            password = password + full_turns + partial_turns
 
-    print(password)
-    # 6133
-
-question1()
-question2()
+print(f'Question 1 answer: {question1()}')
+print(f'Question 2 answer: {question2()}')
